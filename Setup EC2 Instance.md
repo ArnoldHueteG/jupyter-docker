@@ -167,10 +167,75 @@ Then you are going to be send to the panel of active alarms. You can see in the 
 ![](images/create_cloudwatch_alarm_5_successfull.png)
 
 
-## 11.2 Add a cpu stress in the initialization file of the ec2 instance
+### 11.2 Add a cpu stress in the initialization file of the ec2 instance
 
-To make sure the alarm does work, we are going to add a cpu stress when the instance initialize. 
+The alarm we just created, have two status "In Alarm" and "OK". When the instance is stopped the default status is "In Alarm". When we run the instance, it doesn't change to "OK" automatically, because the startup process don't consume enough cpu to make change the alarm to status. And if the alarm doesn't change to "OK", the instance wont turn off because the alarm needs a change in the status from "OK" to "In Alarm" to turn off the instance.
 
+To force to change the status to "OK" we are going to add a cpu stress when the instance initialize. First install "stress-ng" and then create the file "rc.local". This file is executed at startup.
+
+```shell
+sudo apt install stress-ng
 sudo nano /etc/rc.local
+```
 
+```
+#!/bin/bash
+stress-ng -c 0 -l 50 -t 120
+
+exit 0
+```
+
+## 12 Creating S3 Bucket
+
+## 13 Access Key to S3 Bucket
+
+## 14 AWS CLI
+
+## 15 Installing Docker
+
+curl -sSL https://get.docker.com/ | sh
+sudo usermod -aG docker ubuntu
+sudo reboot
+
+## 16 Building Docker image
+
+mkdir wd
+cd wd
+nano Dockerfile
+
+FROM jupyter/scipy-notebook
+USER root
+COPY .aws/* .aws/
+RUN conda install s3fs && \
+    conda install fastparquet && \
+    conda install -c conda-forge awscli
+USER jovyan
+
+cd
+nano .aws/credentials
+
+[default]
+aws_access_key_id = AKI**************2ZJ
+aws_secret_access_key = GCt********LXsxvckV********/jWlRxrJTgF
+
+nano .aws/config
+[default]
+region = us-east-2
+
+cd wd
+docker build -t jupyter-docker-aws .
+
+docker run --name jupyter -v /home/ubuntu/wd:/home/jovyan/work/ -d -p 8888:8888 --user root jupyter-docker-aws
+
+#!/bin/bash
+docker stop jupyter && docker rm jupyter && docker run --name jupyter -v /home/ubuntu/wd:/home/jovyan/work/ -d -p 8888:8888 --user root jupyter-docker-aws
+stress-ng -c 0 -l 50 -t 120
+
+exit 0
+
+## Launching Jupyter Notebook
+
+## Writing and Reading from s3 with Pandas
+
+## Using Parquet
 
