@@ -22,7 +22,7 @@ An AMI ([Amazon Machine Image](http://docs.aws.amazon.com/AWSEC2/latest/UserGuid
 
 ### 1.2 Choose an instance Type
 
-A micro instance is enough for the initial setup.
+A small instance is enough for the initial setup.
 
 ![choose_instance_type](images/launch_ec2_2_choose_instance_type.png)
 
@@ -195,13 +195,16 @@ The alarm we just created, have two status "In Alarm" and "OK". When the instanc
 
 To force to change the status to "OK" we are going to add a cpu stress when the instance initialize. First install "stress-ng" and then create the file "rc.local". This file is executed at startup.
 
-
 https://wiki.ubuntu.com/Kernel/Reference/stress-ng
+
 
 ```shell
 sudo apt install stress-ng -y
 sudo nano /etc/systemd/system/rc-local.service
+```
+Copy and paste this code below.
 
+```txt
 [Unit]
 Description=/etc/rc.local Compatibility
 ConditionPathExists=/etc/rc.local
@@ -216,28 +219,48 @@ SysVStartPriority=99
 
 [Install]
 WantedBy=multi-user.target
+```
 
+Then create the /etc/rc.local file executing this command.
+
+```shell
 printf '%s\n' '#!/bin/bash' 'exit 0' | sudo tee -a /etc/rc.local
+```
 
+Then add execute permission to /etc/rc.local file.
+
+```shell
 sudo chmod +x /etc/rc.local
 ```
+
+After that, enable the service on system boot. Then start the service and check its status.
 
 ```shell
 sudo systemctl enable rc-local
 sudo systemctl start rc-local.service
 sudo systemctl status rc-local.service
 ```
+Then add the stress command in the /etc/rc.local file.
 
+```shell
 sudo nano /etc/rc.local
+```
+
+Copy the code below.
+
 ```
 #!/bin/bash
 stress-ng -c 0 -l 50 -t 120
 
 exit 0
 ```
+
+Then reboot the system.
+
 ```
 sudo reboot
 ```
+
 ## 3 Creating S3 Bucket <a name="3"></a>
 
 In order to share datasets and models we make, we are going to use "S3".
