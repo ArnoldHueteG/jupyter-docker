@@ -394,23 +394,6 @@ sudo reboot
 
 Then we have to build the image we are going to use with a Dockerfile. In this file we can put the libraries we need additionally from the base image "jupyter/scipy-notebook". 
 
-```shell
-mkdir wd
-cd wd
-nano Dockerfile
-```
-Copy and paste this snippet in "Dockerfile" file.
-
-```docker
-FROM jupyter/scipy-notebook
-USER root
-COPY .aws/* .aws/
-RUN conda install s3fs && \
-    conda install fastparquet && \
-    conda install -c conda-forge awscli
-USER jovyan
-```
-
 Verify you have the credential files in "./aws" folder.
 
 ```shell
