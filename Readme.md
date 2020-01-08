@@ -129,7 +129,6 @@ Go to Services type CloudWatch and then go to alarms in the left panel.
 
 ### 2.1 Creating Cloudwatch Alarm
 
-
 #### 2.1.2 Specify metric and conditions
 
 First you will select the metric to use to set a threshold. Just click en select metric.
@@ -189,9 +188,9 @@ Then you are going to be send to the panel of active alarms. You can see in the 
 
 ![](images/create_cloudwatch_alarm_5_successfull.png)
 
-Then wait until the instance has a in alarma state and it turns off. It would take a minute at least. Then start the instance.
+Then go to ec2 services and wait until the instance has a in alarma state and it turns off. It would take a minute at least. Then start the instance.
 
-
+![](images/create_cloudwatch_alarm_6_restart.png)
 
 ### 2.2 Add a cpu stress in the initialization file of the ec2 instance
 
