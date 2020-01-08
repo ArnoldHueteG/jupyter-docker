@@ -1,10 +1,12 @@
 ### Index
-* [Setup EC2 AWS](#1)
-* [Set Up](#2)
-* [Create](#3)
-* [Local Changes](#4)
+1 [Setup EC2 AWS](#1 Setup EC2 AWS)
+2 [Create alarm to stop ec2 instance if inactivity](#2 Create alarm to stop ec2 instance if inactivity)
+3 [Create](#3)
+4 [Local Changes](#4)
 
-## 1 Setup EC2 AWS.
+<hr>
+
+## 1 Setup EC2 AWS
 
 ### 1.1 Choose an AMI
 
