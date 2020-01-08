@@ -115,9 +115,12 @@ Press control + "ñ" to open the terminal.
 
 ![](images/connect_ec2_6_terminal.png)
 
+
+```shell
 sudo apt update
 sudo apt-get upgrade -y
 sudo apt install python-pip -y
+```
 
 ## 2 Create alarm to stop ec2 instance if inactivity <a name="2"></a>
 
