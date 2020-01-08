@@ -472,7 +472,6 @@ Then build the image.
 ```
 cd jupyter-docker
 docker build -t jupyter_docker_aws .
-docker build --no-cache=true -t jupyter_docker_aws .
 ```
 
 ## 9 Launching Jupyter Notebook <a name="9"></a>
