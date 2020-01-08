@@ -305,7 +305,7 @@ Then "Add user".
 ![](images/create_access_key_2_add_user.png)
 
 Put a Name to your user. For example my user name is "iam-user-jupyter-docker". Then checked both ways of access type.
-Then unchecked "Require password reset"
+Then unchecked "Require password reset". Then click on "Next: Permissions".
 
 ![](images/create_access_key_2_add_user_1.png)
 
