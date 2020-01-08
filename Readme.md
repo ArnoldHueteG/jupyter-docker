@@ -123,11 +123,12 @@ sudo apt install python-pip -y
 
 Since this instance is going to be use for development purpose, its recommended creating a cloudwatch alarm to stop the ec2 instance in case it is not used. This way we avoid unexpected charges.
 
+Go to Services type CloudWatch and then go to alarms in the left panel.
+
 ![](images/create_cloudwatch_alarm_0_press_button.png)
 
 ### 2.1 Creating Cloudwatch Alarm
 
-Services -> CloudWatch
 
 #### 2.1.2 Specify metric and conditions
 
@@ -187,6 +188,9 @@ Finally you get a preview just to confirm the configurations. Click on "Create".
 Then you are going to be send to the panel of active alarms. You can see in the image that the alarm has been setup.
 
 ![](images/create_cloudwatch_alarm_5_successfull.png)
+
+Then wait until the instance has a in alarma state and it turns off. It would take a minute at least. Then start the instance.
+
 
 
 ### 2.2 Add a cpu stress in the initialization file of the ec2 instance
