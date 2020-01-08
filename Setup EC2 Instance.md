@@ -1,3 +1,9 @@
+### Index
+* [Setup EC2 AWS](#1)
+* [Set Up](#2)
+* [Create](#3)
+* [Local Changes](#4)
+
 ## 1 Setup EC2 AWS.
 
 ### 1.1 Choose an AMI
