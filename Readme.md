@@ -115,6 +115,7 @@ Press control + "ñ" to open the terminal.
 
 ![](images/connect_ec2_6_terminal.png)
 
+Upgrade the ubuntu 
 
 ```shell
 sudo apt update
@@ -469,6 +470,7 @@ chmod 664 .aws/*
 Then build the image.
 
 ```
+cd jupyter-docker
 docker build -t jupyter_docker_aws .
 docker build --no-cache=true -t jupyter_docker_aws .
 ```
