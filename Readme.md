@@ -462,15 +462,15 @@ region = us-east-2
 
 Then just copy the folder ".aws" inside "wd" folder. 
 ```shell
-cd wd
+cd ~/wd/jupyter-docker
 cp -avr ~/.aws .aws
 chmod 664 .aws/*
 ```
 
 Then build the image.
 
-```
-cd jupyter-docker
+```shell
+cd ~/wd/jupyter-docker
 docker build -t jupyter_docker_aws .
 ```
 
