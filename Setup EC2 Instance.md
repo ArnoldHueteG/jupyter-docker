@@ -1,34 +1,36 @@
-## 1 Choose an AMI
+## 1 Setup EC2 AWS.
+
+### 1.1 Choose an AMI
 
 An AMI ([Amazon Machine Image](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)) is virtual machine image ready to run a determined SO (Linux or Windows). I recommend using the latest Ubuntu Server realease. At this time is Ubuntu Server 18.04 LTS (HVM) , SSD Volume Type.
 
 ![choose_ami](images/launch_ec2_1_choose_ami.png)
 
-## 2 Choose an instance Type
+### 1.2 Choose an instance Type
 
 A micro instance is enough for the initial setup.
 
 ![choose_instance_type](images/launch_ec2_2_choose_instance_type.png)
 
-## 3 Configure instance details
+### 1.3 Configure instance details
 
 For our purpose, this tab can be ignore. Just so you know, here you can choose to create several instances, request spot instances, choose vpc between ohers. 
 
 ![choose_configure_instance_details](images/launch_ec2_3_configure_instance_details.png)
 
-## 4 Add Storage
+### 1.4 Add Storage
 
 I recommend to use 16 GBs. That would be enoguh to install docker and jupyter image. To store datasets we are going to use S3.
 
 ![choose_add_storage](images/launch_ec2_4_add_storage.png)
 
-## 5 Add Tags
+### 1.5 Add Tags
 
 For our purpose, this tab can be ignore. 
 
 ![choose_add_tags](images/launch_ec2_5_add_tags.png)
 
-## 6 Configure Security Group
+### 1.6 Configure Security Group
 
 Choose "Create a new security group". Then give a name for the security group, for example "jupyter-docker-security-group". Then give a description for example "Ports: 22,8888,2376,443".
 
@@ -36,20 +38,20 @@ Then configure the following security rules as in the image:
 
 ![configure_security_group](images/launch_ec2_6_configure_security_group.png)
 
-## 7 Review Instance Launch
+### 1.7 Review Instance Launch
 
 This tab shows a resume for the configuration of the ec2 instance. Verify and then just click launch.
 
 ![review_instance_launch](images/launch_ec2_7_review_instance_launch.png)
 
-## 8 Create a Key Pair
+### 1.8 Create a Key Pair
 
 They are going to ask you to select or create a new key pair. We are going to create a new one. Just put a name to the key and then save it. Its important not to lose the key pair because you wont be able to get later.
 
 ![](images/launch_ec2_8_key_pair.png)
 
 
-## 9 Setting a Static IP Adress
+### 1.9 Setting a Static IP Adress
 
 Before connecting to the ec2 instance, we are going to set a static ip adress. Each time an instance is run, AWS assigns a public ip to reach through internet. So each time you run the instance you are going to get a different public ip. You can deal with that but I prefer to have a static ip. This way your string connection won't change.
 
@@ -70,7 +72,7 @@ Then select the instance and then click on "Associate".
 
 ![](images/elastic_ip_5_associate.png)
 
-## 10 Connect to your instance
+### 1.10 Connect to your instance
 
 To connect to your instance you need an ssh client. It can be git bash, putty, moba exterm, or even power shell. I going to use "visual studio code" because you can edit files like they are local and send commands through console in the same workspace.
 
@@ -103,17 +105,17 @@ sudo apt update
 sudo apt-get upgrade -y
 sudo apt install python-pip -y
 
-## 11 Create alarm to stop ec2 instance if inactivity
+## 2 Create alarm to stop ec2 instance if inactivity
 
 Since this instance is going to be use for development purpose, its recommended creating a cloudwatch alarm to stop the ec2 instance in case it is not used. This way we avoid unexpected charges.
 
 ![](images/create_cloudwatch_alarm_0_press_button.png)
 
-### 11.1 Creating Cloudwatch Alarm
+### 2.1 Creating Cloudwatch Alarm
 
 Services -> CloudWatch
 
-#### 11.1.2 Specify metric and conditions
+#### 2.1.2 Specify metric and conditions
 
 First you will select the metric to use to set a threshold. Just click en select metric.
 
@@ -142,7 +144,7 @@ Finally select "Treat missing data as bad (breaching threshold)" just in case we
 
 ![](images/create_cloudwatch_alarm_1_6_select_metric_set_conditions.png)
 
-#### 11.1.2 Configure Actions
+#### 2.1.2 Configure Actions
 
 First, remove the notification. We dont want to be aware of alarms states. We want to stop the ec2 instance smoothly.
 
@@ -156,13 +158,13 @@ In "Whenever this alarm state is" select "in Alarm". Then select the action "Sto
 
 ![](images/create_cloudwatch_alarm_2_4_configure_actions_add_action_review.png)
 
-#### 11.1.3 Add Description
+#### 2.1.3 Add Description
 
 Then define a unique name and a description for the alarm. For example, "Stop inactive ec2 instance : i-0d1e1d80f7d901dd8" as an alarm name. And a description like "Stop ec2 instance when cpu utilization is less than 5%". Then click on "Next"
 
 ![](images/create_cloudwatch_alarm_3_add_description.png)
 
-#### 11.1.4 Preview and Create
+#### 2.1.4 Preview and Create
 
 Finally you get a preview just to confirm the configurations. Click on "Create".
 
@@ -173,7 +175,7 @@ Then you are going to be send to the panel of active alarms. You can see in the 
 ![](images/create_cloudwatch_alarm_5_successfull.png)
 
 
-### 11.2 Add a cpu stress in the initialization file of the ec2 instance
+### 2.2 Add a cpu stress in the initialization file of the ec2 instance
 
 The alarm we just created, have two status "In Alarm" and "OK". When the instance is stopped the default status is "In Alarm". When we run the instance, it doesn't change to "OK" automatically, because the startup process don't consume enough cpu to make change the alarm to status. And if the alarm doesn't change to "OK", the instance wont turn off because the alarm needs a change in the status from "OK" to "In Alarm" to turn off the instance.
 
@@ -222,7 +224,7 @@ exit 0
 ```
 sudo reboot
 ```
-## 12 Creating S3 Bucket
+## 3 Creating S3 Bucket
 
 In order to share datasets and models we make, we are going to use "S3".
 
@@ -248,7 +250,7 @@ Finally click on "Create Bucket"
 
 ![](images/create_bucket_4_review.png)
 
-## 13 Access Key to S3 Bucket
+## 4 Access Key to S3 Bucket
 
 To save files in s3 programtically, we are going to use awscli (command line) and boto3 (python). In order to do that we need credentials or access keys. So go "IAM" service.
 
@@ -338,7 +340,7 @@ Here you can see the credentials.
 ![](images/create_access_key_3_credentials.png)
 
 
-## 14 AWS CLI
+## 5 AWS CLI
 
 AWS CLI is the command line interface to interact with aws services programatically. You can install it with pip. Then configure the access key as is in the pictures. In "region name" put "us-east-2". In "output format" just press enter.
 
@@ -370,7 +372,7 @@ You can verify the file has been upload in aws console.
 
 ![](images/aws_cli_2_s3_bk.png)
 
-## 15 Cloning git repository
+## 6 Cloning git repository
 
 Clone the git repository to get the basic Dockerfile to build the image.
 
@@ -380,7 +382,7 @@ cd wd
 git clone https://github.com/ArnoldHueteG/jupyter-docker.git
 ```
 
-## 15 Installing Docker
+## 7 Installing Docker
 
 We are going to use docker to install Jupyter. In order to install it, copy and paste the code above. The final command will restart the instance.
 
@@ -390,7 +392,7 @@ sudo usermod -aG docker ubuntu
 sudo reboot
 ```
 
-## 16 Building Docker image
+## 8 Building Docker image
 
 Then we have to build the image we are going to use with a Dockerfile. In this file we can put the libraries we need additionally from the base image "jupyter/scipy-notebook". 
 
@@ -428,7 +430,7 @@ docker build -t jupyter_docker_aws .
 docker build --no-cache=true -t jupyter_docker_aws .
 ```
 
-## Launching Jupyter Notebook
+## 9 Launching Jupyter Notebook
 
 To launch Jupyter execute the command above.
 
@@ -447,7 +449,6 @@ Change the link below with your elastic ip and token. Then copy the link to a br
 
 ```
 http://3.136.67.189:8888/lab?token=62e558c74e33bf55714bdeb367bba5f3f42bf4a8aab83bcf
-http://18.225.25.66:8888/lab?token=b32a61e7074f79fc99ba865de342cc544f4fa1013db0e94d
 ```
 
 To launch jupyter at the startup of the instance add the code below in "/etc/rc.local".
@@ -470,9 +471,7 @@ Then restart the instance to test.
 sudo reboot
 ```
 
-## Writing and Reading from s3 with Pandas
+## 10 Writing and Reading from s3 with Pandas
 
-
-
-## Using Parquet
+You can see examples in "Writing & Reading over S3.ipynb".
 
