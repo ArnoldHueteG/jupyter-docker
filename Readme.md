@@ -310,7 +310,7 @@ Then we are going to set permissions to the user. We are going to create an spec
 
 ![](images/create_access_key_2_add_user_2_set_permisions.png)
 
-A new window is going to open. Go to "JSON" tab. Copy and paste the snippet above.
+A new window is going to open. Go to "JSON" tab. Copy and paste the snippet above. Change the bucket name with yours.
 
 ```json
 {
