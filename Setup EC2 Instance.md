@@ -1,12 +1,12 @@
 ### Index
-* [Setup EC2 AWS](#setup)
+* [Setup EC2 AWS](#1)
 * [Create alarm to stop ec2 instance if inactivity](#2)
 * [Create](#3)
 * [Local Changes](#4)
 
 <hr>
 
-## 1 Setup EC2 AWS <a name="setup"></a>
+## 1 Setup EC2 AWS <a name="1"></a>
 
 ### 1.1 Choose an AMI
 
@@ -113,7 +113,7 @@ sudo apt update
 sudo apt-get upgrade -y
 sudo apt install python-pip -y
 
-## 2 Create alarm to stop ec2 instance if inactivity
+## 2 Create alarm to stop ec2 instance if inactivity <a name="2"></a>
 
 Since this instance is going to be use for development purpose, its recommended creating a cloudwatch alarm to stop the ec2 instance in case it is not used. This way we avoid unexpected charges.
 
