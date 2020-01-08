@@ -1,8 +1,14 @@
 ### Index
-* [Setup EC2 AWS](#1)
-* [Create alarm to stop ec2 instance if inactivity](#2)
-* [Create](#3)
-* [Local Changes](#4)
+1. [Setup EC2 AWS](#1)
+2. [Create alarm to stop ec2 instance if inactivity](#2)
+3. [Creating S3 Bucket](#3)
+4. [Access Key to S3 Bucket](#4)
+5. [AWS CLI](#5)
+6. [Cloning git repository](#6)
+7. [Installing Docker](#7)
+8. [Building Docker image](#8)
+9. [Launching Jupyter Notebook](#9)
+10. [Writing and Reading from s3 with Pandas](#10)
 
 <hr>
 
@@ -232,7 +238,7 @@ exit 0
 ```
 sudo reboot
 ```
-## 3 Creating S3 Bucket
+## 3 Creating S3 Bucket <a name="3"></a>
 
 In order to share datasets and models we make, we are going to use "S3".
 
@@ -258,7 +264,7 @@ Finally click on "Create Bucket"
 
 ![](images/create_bucket_4_review.png)
 
-## 4 Access Key to S3 Bucket
+## 4 Access Key to S3 Bucket <a name="4"></a>
 
 To save files in s3 programtically, we are going to use awscli (command line) and boto3 (python). In order to do that we need credentials or access keys. So go "IAM" service.
 
@@ -348,7 +354,7 @@ Here you can see the credentials.
 ![](images/create_access_key_3_credentials.png)
 
 
-## 5 AWS CLI
+## 5 AWS CLI <a name="5"></a>
 
 AWS CLI is the command line interface to interact with aws services programatically. You can install it with pip. Then configure the access key as is in the pictures. In "region name" put "us-east-2". In "output format" just press enter.
 
@@ -380,7 +386,7 @@ You can verify the file has been upload in aws console.
 
 ![](images/aws_cli_2_s3_bk.png)
 
-## 6 Cloning git repository
+## 6 Cloning git repository <a name="6"></a>
 
 Clone the git repository to get the basic Dockerfile to build the image.
 
@@ -390,7 +396,7 @@ cd wd
 git clone https://github.com/ArnoldHueteG/jupyter-docker.git
 ```
 
-## 7 Installing Docker
+## 7 Installing Docker <a name="7"></a>
 
 We are going to use docker to install Jupyter. In order to install it, copy and paste the code above. The final command will restart the instance.
 
@@ -400,7 +406,7 @@ sudo usermod -aG docker ubuntu
 sudo reboot
 ```
 
-## 8 Building Docker image
+## 8 Building Docker image <a name="8"></a>
 
 Then we have to build the image we are going to use with a Dockerfile. In this file we can put the libraries we need additionally from the base image "jupyter/scipy-notebook". 
 
@@ -438,7 +444,7 @@ docker build -t jupyter_docker_aws .
 docker build --no-cache=true -t jupyter_docker_aws .
 ```
 
-## 9 Launching Jupyter Notebook
+## 9 Launching Jupyter Notebook <a name="9"></a>
 
 To launch Jupyter execute the command above.
 
@@ -479,7 +485,7 @@ Then restart the instance to test.
 sudo reboot
 ```
 
-## 10 Writing and Reading from s3 with Pandas
+## 10 Writing and Reading from s3 with Pandas <a name="10"></a>
 
 You can see examples in "Writing & Reading over S3.ipynb".
 
