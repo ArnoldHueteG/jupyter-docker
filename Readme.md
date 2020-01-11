@@ -123,11 +123,16 @@ Press control + "ñ" to open the terminal.
 
 ![](images/connect_ec2_6_terminal.png)
 
-Upgrade the ubuntu 
+Upgrade Ubuntu.
 
 ```shell
 sudo apt update
 sudo apt-get upgrade -y
+```
+
+Install pip.
+
+```shell 
 sudo apt install python-pip -y
 ```
 
