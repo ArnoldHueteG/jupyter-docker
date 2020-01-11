@@ -8,7 +8,8 @@
 7. [Installing Docker](#7)
 8. [Building Docker image](#8)
 9. [Launching Jupyter Notebook](#9)
-10. [Writing and Reading from s3 with Pandas](#10)
+10. [Adding libraries](#10)
+11. [Writing and Reading from s3 with Pandas](#11)
 
 <hr>
 
@@ -544,11 +545,11 @@ sudo reboot
 
 Then get the token again and connect to the link.
 
-## 10 Adding libraries <a name="9"></a>
+## 10 Adding libraries <a name="10"></a>
 
 By default all the libraries that you install inside a container are ephemeral. To install libraries to persist in the image, it is a best practice to use a Dockerfile. But to test an installation we are going to do it through a terminal in jupyter lab and then add the command in the docker file to rebuild the image.
 
-### 10.1 Installing library through terminal in jupyter lab.
+### 10.1 Install library through terminal in jupyter lab.
 
 Open a terminal in jupyter.
 
@@ -562,7 +563,7 @@ Finally check if the library is installed.
 
 ![](images/adding_library_3_verify.png)
 
-### 10.2 Adding command pip or conda to Dockerfile
+### 10.2 Add pip or conda command to Dockerfile and rebuild image.
 
 Just open the Dockerfile and add the pip command as in the image below. You can use jupyter text editor.
 
@@ -578,6 +579,9 @@ docker build -t jupyter_docker_aws .
 ![](images/adding_library_5_rebuild_image_1.png)
 
 ![](images/adding_library_5_rebuild_image_2.png)
+
+
+### 10.3 Relaunch jupyter.
 
 Then relaunch the container with the code below. 
 
@@ -601,7 +605,7 @@ Reload the jupyter in your browser and enter the new token.
 
 Open a notebook and import the library to test the library was installed succesfull.
 
-
+![](images/adding_library_6_import_library.png)
 
 ## 11 Writing and Reading from s3 with Pandas <a name="10"></a>
 
