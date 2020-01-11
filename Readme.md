@@ -46,7 +46,15 @@ For our purpose, this tab can be ignore.
 
 ### 1.6 Configure Security Group
 
-Choose "Create a new security group". Then give a name for the security group, for example "jupyter-docker-security-group". Then give a description for example "Ports: 22,8888,2376,443".
+Choose "Create a new security group". Then give a name for the security group, for example "jupyter-docker-security-group". Then give a description for example "Ports: 22,8888,2376,443,80".
+
+Ports and usages:
+
+* 22 : SSH
+* 80 : HTTP
+* 443 : HTTPS
+* 2376 : DockerHub
+* 8888 : Jupyter
 
 Then configure the following security rules as in the image:  
 
@@ -392,7 +400,7 @@ AWS CLI is the command line interface to interact with aws services programatica
 sudo pip install awscli
 aws configure
 ```
-![](images/aws_cli_1_configure.PNG)
+![](images/aws_cli_1_configure.png)
 
 To test the connection execute this command.
 
@@ -436,7 +444,7 @@ sudo usermod -aG docker ubuntu
 sudo reboot
 ```
 
-## 8 Building Docker image <a name="8"></a>
+## 8 Building Docker image for Jupyter <a name="8"></a>
 
 Then we have to build the image we are going to use with a Dockerfile. In this file we can put the libraries we need additionally from the base image "jupyter/scipy-notebook". 
 
@@ -447,20 +455,16 @@ cd
 cat .aws/credentials
 ```
 
-```
-[default]
-aws_access_key_id = AKI**************2ZJ
-aws_secret_access_key = GCt********LXsxvckV********/jWlRxrJTgF
-```
+![](images/aws_cli_3_verify_credentials_1.png)
+
 ```shell
 cat .aws/config
 ```
-```
-[default]
-region = us-east-2
-```
+
+![](images/aws_cli_3_verify_credentials_2.png)
 
 Then just copy the folder ".aws" inside "wd" folder. 
+
 ```shell
 cd ~/wd/jupyter-docker
 cp -avr ~/.aws .aws
@@ -479,8 +483,21 @@ docker build -t jupyter_docker_aws .
 To launch Jupyter execute the command above.
 
 ```
-docker run --name jupyter -v /home/ubuntu/wd:/home/jovyan/work/ -d -p 8888:8888 --user root jupyter_docker_aws
+docker run --name jupyter \
+-v /home/ubuntu/wd:/home/jovyan/work/ \
+-d -p 8888:8888 \
+-e GRANT_SUDO=yes --user root \
+jupyter_docker_aws
+
 ```
+
+* "--name" : gives an name to the container
+* "-v" : link a directory from the instance to a directory to the container. It lets you persist files.
+* "-d" : run in background
+* "-p" : link a port in the instance to a port in the container.
+* "-e GRANT_SUDO=yes --user root" : to use sudo whithin a container. Useful to install libraries.
+* "jupyter_docker_aws" : is the name of the image we just built before.
+
 
 It wont launch the token. To see the token.
 
@@ -503,7 +520,12 @@ sudo nano /etc/rc.local
 
 ```
 #!/bin/bash
-docker stop jupyter && docker rm jupyter && docker run --name jupyter -v /home/ubuntu/wd:/home/jovyan/work/ -d -p 8888:8888 --user root jupyter_docker_aws
+docker stop jupyter && docker rm jupyter && \
+docker run --name jupyter \
+-v /home/ubuntu/wd:/home/jovyan/work/ \
+-d -p 8888:8888 \
+-e GRANT_SUDO=yes --user root \
+jupyter_docker_aws
 stress-ng -c 0 -l 50 -t 60
 
 exit 0
@@ -515,7 +537,68 @@ Then restart the instance to test.
 sudo reboot
 ```
 
-## 10 Writing and Reading from s3 with Pandas <a name="10"></a>
+Then get the token again and connect to the link.
+
+## 10 Adding libraries <a name="9"></a>
+
+By default all the libraries that you install inside a container are ephemeral. To install libraries to persist in the image, it is a best practice to use a Dockerfile. But to test an installation we are going to do it through a terminal in jupyter lab and then add the command in the docker file to rebuild the image.
+
+### 10.1 Installing library through terminal in jupyter lab.
+
+Open a terminal in jupyter.
+
+![](images/adding_library_1_terminal_jupyter.png)
+
+Install the library with pip. You can try with conda too.
+
+![](images/adding_library_2_pip.png)
+
+Finally check if the library is installed.
+
+![](images/adding_library_3_verify.png)
+
+### 10.2 Adding command pip or conda to Dockerfile
+
+Just open the Dockerfile and add the pip command as in the image below. You can use jupyter text editor.
+
+![](images/adding_library_4_modify_Dockerfile.png)
+
+Then rebuild the image.
+
+```shell
+cd ~/wd/jupyter-docker
+docker build -t jupyter_docker_aws .
+```
+
+![](images/adding_library_5_rebuild_image_1.png)
+
+![](images/adding_library_5_rebuild_image_2.png)
+
+Then relaunch the container with the code below. 
+
+```
+docker stop jupyter && docker rm jupyter && \
+docker run --name jupyter \
+-v /home/ubuntu/wd:/home/jovyan/work/ \
+-d -p 8888:8888 \
+-e GRANT_SUDO=yes --user root \
+jupyter_docker_aws
+```
+Then to get the token.
+
+```
+docker logs jupyter 2>&1 | grep token
+```
+
+![](images/adding_library_4_get_token.png)
+
+Reload the jupyter in your browser and enter the new token.
+
+Open a notebook and import the library to test the library was installed succesfull.
+
+
+
+## 11 Writing and Reading from s3 with Pandas <a name="10"></a>
 
 You can see examples in "Writing & Reading over S3.ipynb".
 
