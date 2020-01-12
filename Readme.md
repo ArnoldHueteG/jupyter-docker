@@ -327,11 +327,16 @@ Then unchecked "Require password reset". Then click on "Next: Permissions".
 
 ![](images/create_access_key_2_add_user_1.png)
 
-Then we are going to set permissions to the user. We are going to create an specific policy. Click on "Create Policy".
+Then we are going to set permissions to the user. We are going to create an specific policy. So, click on "Attach existing policies directly" and then click on "Create Policy".
 
 ![](images/create_access_key_2_add_user_2_set_permisions.png)
 
-A new window is going to open. Go to "JSON" tab. Copy and paste the snippet above. Change the bucket name with yours.
+A new window is going to open. 
+
+![](images/create_access_key_2_add_user_3_new_window.png)
+
+
+Go to "JSON" tab. Copy and paste the snippet above. Change the bucket name with yours.
 
 ```json
 {
@@ -377,7 +382,11 @@ Then you are going to see a success message.
 
 ![](images/create_access_key_2_add_user_3_create_policy_ready.png)
 
-Then we are going to apply the policy to the user. Type the name of the policy to search and then select it.
+Then we are going to apply the policy to the user. Go back to the "Add User" tab.
+
+![](images/create_access_key_2_add_user_4_goback.png)
+
+Then type the name of the policy to search and then select it.
 
 ![](images/create_access_key_2_add_user_4_select_policy.png)
 
@@ -493,8 +502,7 @@ docker run --name jupyter \
 -v /home/ubuntu/wd:/home/jovyan/work/ \
 -d -p 8888:8888 \
 -e GRANT_SUDO=yes --user root \
-jupyter_docker_aws
-
+jupyter_docker_aws 
 ```
 
 * "--name" : gives an name to the container
@@ -518,6 +526,35 @@ Change the link below with your elastic ip and token. Then copy the link to a br
 http://3.136.67.189:8888/lab?token=62e558c74e33bf55714bdeb367bba5f3f42bf4a8aab83bcf
 ```
 
+Then we are going to set up a password. To do that connect to bash your container.
+
+```shell
+docker exec -it jupyter bash
+```
+
+Then use the command below to generate the encripted password.
+
+```shell
+ipython -c "from notebook.auth import passwd; passwd()"
+```
+Then you are going to get the encripted password.
+
+![](images/launch_jupyter_2_password.png)
+
+Control+D to get out from the container.
+
+Then rerun the jupyter container with the code below. Change the encripted password with yours.
+
+```
+docker stop jupyter && docker rm jupyter && \
+docker run --name jupyter \
+-v /home/ubuntu/wd:/home/jovyan/work/ \
+-d -p 8888:8888 \
+-e GRANT_SUDO=yes --user root \
+jupyter_docker_aws \
+start-notebook.sh --NotebookApp.password='sha1:06a9d429c494:136c8587efbdd31e09929e53519388e6ff99773a'   
+```
+
 To launch jupyter at the startup of the instance add the code below in "/etc/rc.local".
 
 ```shell
@@ -531,7 +568,8 @@ docker run --name jupyter \
 -v /home/ubuntu/wd:/home/jovyan/work/ \
 -d -p 8888:8888 \
 -e GRANT_SUDO=yes --user root \
-jupyter_docker_aws
+jupyter_docker_aws \
+start-notebook.sh --NotebookApp.password='sha1:06a9d429c494:136c8587efbdd31e09929e53519388e6ff99773a'   
 stress-ng -c 0 -l 50 -t 60
 
 exit 0
@@ -543,7 +581,7 @@ Then restart the instance to test.
 sudo reboot
 ```
 
-Then get the token again and connect to the link.
+Then refresh the browser.
 
 ## 10 Adding libraries <a name="10"></a>
 
@@ -583,7 +621,7 @@ docker build -t jupyter_docker_aws .
 
 ### 10.3 Relaunch jupyter.
 
-Then relaunch the container with the code below. 
+Then relaunch the jupyter container with the code below. 
 
 ```
 docker stop jupyter && docker rm jupyter && \
@@ -591,17 +629,11 @@ docker run --name jupyter \
 -v /home/ubuntu/wd:/home/jovyan/work/ \
 -d -p 8888:8888 \
 -e GRANT_SUDO=yes --user root \
-jupyter_docker_aws
-```
-Then to get the token.
-
-```
-docker logs jupyter 2>&1 | grep token
+jupyter_docker_aws \
+start-notebook.sh --NotebookApp.password='sha1:06a9d429c494:136c8587efbdd31e09929e53519388e6ff99773a'
 ```
 
-![](images/adding_library_4_get_token.png)
-
-Reload the jupyter in your browser and enter the new token.
+Reload the jupyter in your browser.
 
 Open a notebook and import the library to test the library was installed succesfull.
 
